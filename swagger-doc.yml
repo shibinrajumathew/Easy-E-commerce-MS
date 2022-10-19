@@ -1,0 +1,476 @@
+openapi: "3.0.1"
+info:
+  title: "The HandsUp Project"
+  version: "2021-09-01T17:21:21Z"
+servers:
+  - url: "/api/v1"
+tags:
+  - name: "Category"
+  - name: "Seller's Item"
+  - name: "Products"
+  - name: "User account"
+paths:
+  /user/verify:
+    get:
+      tags:
+        - "User account"
+      parameters:
+        - name: "entity"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "value"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserVerify"
+      deprecated: true
+  /user/registration:
+    post:
+      tags:
+        - "User account"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Registration"
+      responses:
+        "200":
+          description: created
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  sucess:
+                    type: "boolean"
+                  data:
+                    $ref: "#/components/schemas/Registration"
+      deprecated: true
+  /user/profile:
+    get:
+      tags:
+        - "User account"
+      parameters:
+        - in: "query"
+          name: "countryCode"
+          required: true
+          schema:
+            type: "string"
+        - in: "query"
+          name: "number"
+          schema:
+            type: "string"
+          required: true
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  sucess:
+                    type: "boolean"
+                  data:
+                    $ref: "#/components/schemas/Profile"
+      deprecated: true
+    post:
+      tags:
+        - "User account"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+      deprecated: true
+  /product/create/:
+    post:
+      tags:
+        - "Seller's Item"
+      summary: To create seller's item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Products"
+
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  sucess:
+                    type: "boolean"
+                  data:
+                    $ref: "#/components/schemas/Products"
+  /product/update/:
+    patch:
+      tags:
+        - "Seller's Item"
+      summary: To update seller's item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Products"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  sucess:
+                    type: "boolean"
+                  data:
+                    $ref: "#/components/schemas/Empty"
+  /product/delete/{id}:
+    delete:
+      tags:
+        - "Seller's Item"
+      summary: To delete seller's item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  sucess:
+                    type: "boolean"
+                  data:
+                    $ref: "#/components/schemas/Products"
+  /product/list/:
+    get:
+      tags:
+        - "Seller's Item"
+      summary: selling items details
+      parameters:
+        - name: username
+          in: query
+          description: username
+          schema:
+            type: string
+        - name: doSort
+          in: query
+          required: true
+          description: need to sort or not
+          schema:
+            type: boolean
+        - name: sortType
+          in: query
+          description: sortType
+          schema:
+            type: string
+            enum:
+              - price
+              - date
+        - name: sortOrder
+          in: query
+          description: sortOrder
+          schema:
+            type: string
+            enum:
+              - lowPrice
+              - highPrice
+              - oldest
+              - newest
+        - name: doFilter
+          in: query
+          description: doFilter
+          required: true
+          schema:
+            type: boolean
+        - name: userType
+          in: query
+          description: userType
+          required: true
+          schema:
+            type: string
+            enum:
+              - buyer
+              - seller
+        - name: category
+          in: query
+          description: category
+          schema:
+            type: string
+        - name: subCategory
+          in: query
+          description: subCategory
+          schema:
+            type: string
+        - name: pinCode
+          in: query
+          description: pinCode
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+  /product/details/{id}:
+    get:
+      tags:
+        - Products
+      summary: selling items details
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+  /category:
+    get:
+      tags:
+        - "Category"
+      summary: To get category list
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+    post:
+      tags:
+        - "Category"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      deprecated: true
+  /multilevelcategory:
+    post:
+      tags:
+        - "Category"
+      responses:
+        "200":
+          description: "200 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      deprecated: true
+
+components:
+  schemas:
+    Empty:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        imageUrl:
+          type: string
+        paymentDetails:
+          properties:
+            upi:
+              type: boolean
+            cardPayment:
+              type: boolean
+            cash:
+              type: boolean
+        ownerDetails:
+          properties:
+            userName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            address:
+              type: string
+            phone:
+              type: string
+            pinCode:
+              type: string
+        sellingOptions:
+          type: object
+          properties:
+            isAvailableForRent:
+              type: boolean
+            isAvailableForPurchase:
+              type: boolean
+            priceDetails:
+              $ref: "#/components/schemas/priceDetails"
+            rentDdetails:
+              $ref: "#/components/schemas/rentDetails"
+        isActive:
+          type: boolean
+    priceDetails:
+      title: "Price Schema"
+      type: object
+      properties:
+        price:
+          type: number
+        negotiable:
+          type: boolean
+    rentDetails:
+      title: "Rent Schema"
+      type: object
+      properties:
+        price:
+          type: number
+        type:
+          type: string
+    Registration:
+      title: "User Registration Schema"
+      type: "object"
+      required:
+        - customerName
+        - phoneNumber
+      properties:
+        customerName:
+          type: "string"
+        location:
+          type: "string"
+        image:
+          type: "string"
+        address:
+          type: "string"
+        phoneNumber:
+          type: "object"
+          properties:
+            countryCode:
+              type: "string"
+            number:
+              type: "string"
+    UserVerify:
+      title: "User Verify Schema"
+      type: "object"
+      properties:
+        sucess:
+          type: "boolean"
+        data:
+          type: "object"
+          properties:
+            sendTo:
+              type: "string"
+              default: "email"
+            verificationCode:
+              type: "integer"
+    Profile:
+      title: "Profile Schema"
+      type: "object"
+      properties:
+        phoneNumber:
+          type: "object"
+          properties:
+            countryCode:
+              type: "string"
+            number:
+              type: "string"
+    Category:
+      title: "Category Schema"
+      type: "object"
+      properties:
+        sucess:
+          type: "boolean"
+        data:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              categoryItem:
+                type: "string"
+              parentCategory:
+                type: "string"
+              subcategoryItems:
+                type: "array"
+                items:
+                  type: "string"
+    Products:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        imageUrl:
+          type: string
+        deliveryDetails:
+          properties:
+            homeDelivery:
+              type: boolean
+            pickup:
+              type: boolean
+        paymentDetails:
+          properties:
+            upi:
+              type: boolean
+            cardPayment:
+              type: boolean
+            cash:
+              type: boolean
+        ownerDetails:
+          properties:
+            userName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            address:
+              type: string
+            phone:
+              type: string
+            pinCode:
+              type: string
+        sellingOptions:
+          type: object
+          properties:
+            isAvailableForRent:
+              type: boolean
+            isAvailableForPurchase:
+              type: boolean
+            priceDetails:
+              $ref: "#/components/schemas/priceDetails"
+            rentDdetails:
+              $ref: "#/components/schemas/rentDetails"
+        isActive:
+          type: boolean
